@@ -1,0 +1,16 @@
+# Czego nie wysyłać na Vercel przy wdrożeniu z konsoli (vercel deploy).
+# Przy wdrożeniu przez GitHub decyduje .gitignore, ale ten plik nic nie psuje.
+
+# Sekrety. Nigdy nie mogą opuścić Twojego komputera jako plik.
+# Zmienne ustawiasz w panelu: Settings > Environment Variables.
+.env
+.env.local
+.env*.local
+
+# Vercel instaluje zależności i buduje projekt u siebie.
+# Wysyłanie tych folderów tylko spowalnia wdrożenie i potrafi je zepsuć.
+node_modules
+.next
+
+# Dokumentacja, niepotrzebna na serwerze.
+README.md
