@@ -17,7 +17,12 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://fjstudio.pl";
+/*
+  Production address of the site. Feeds canonical, hreflang and link previews,
+  so it has to match the domain visitors actually land on, including the www
+  prefix that the apex redirects to. Change here if the domain ever changes.
+*/
+const siteUrl = "https://www.fjwebstudio.com";
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
