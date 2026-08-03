@@ -1,21 +1,19 @@
 import Image from "next/image";
-import { ArrowUpRight, FolderOpen } from "@phosphor-icons/react/ssr";
+import { ArrowUpRight } from "@phosphor-icons/react/ssr";
 
-import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
-import { projects } from "@/data/projects";
+import { MaskReveal, Parallax, Reveal } from "@/components/motion/reveal";
+import { projects, type Project } from "@/data/projects";
 import { SECTION_IDS, type Dictionary } from "@/lib/i18n";
 
 export function Projects({ dict }: { dict: Dictionary }) {
   return (
     <section
       id={SECTION_IDS.work}
-      className="relative z-10 px-4 py-24 sm:px-6 lg:py-32"
+      className="relative z-10 border-t border-line py-section"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-[100rem] px-5 sm:px-8">
         <Reveal>
-          <h2 className="max-w-[18ch] text-3xl leading-[1.1] font-semibold tracking-tight text-balance-tight sm:text-4xl lg:text-5xl">
-            {dict.work.headline}
-          </h2>
+          <p className="label text-brand-bright">{dict.work.headline}</p>
         </Reveal>
 
         {projects.length === 0 ? <EmptyState dict={dict} /> : <ProjectGrid />}
@@ -24,96 +22,126 @@ export function Projects({ dict }: { dict: Dictionary }) {
   );
 }
 
-/** Shown while `projects` is empty. Replaced automatically by the grid. */
+/** Shown while `projects` is empty, replaced automatically by the grid. */
 function EmptyState({ dict }: { dict: Dictionary }) {
   return (
-    <Reveal delay={0.08}>
-      <div className="glass relative mt-10 overflow-hidden rounded-3xl px-6 py-16 text-center sm:px-12 sm:py-20">
-        <div className="absolute -top-32 left-1/2 size-[28rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklch,var(--brand)_22%,transparent),transparent)] blur-2xl" />
+    <div className="mt-7 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
+      <h2 className="max-w-[16ch] text-display lg:col-span-7">
+        <MaskReveal text={dict.work.emptyHeadline} />
+      </h2>
 
-        <div className="relative mx-auto flex max-w-[46ch] flex-col items-center">
-          <FolderOpen size={30} weight="light" className="text-brand-bright" />
-          <p className="mt-6 text-xl font-medium tracking-tight sm:text-2xl">
-            {dict.work.emptyHeadline}
-          </p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            {dict.work.emptyBody}
-          </p>
-          <a
-            href={`#${SECTION_IDS.contact}`}
-            className="group mt-9 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand px-7 text-[0.95rem] font-medium whitespace-nowrap text-white transition-colors hover:bg-[color-mix(in_oklch,var(--brand),white_10%)] focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none active:translate-y-px"
-          >
+      <Reveal delay={0.12} className="lg:col-span-5 lg:pt-3">
+        <p className="max-w-[48ch] text-lead text-muted-foreground">
+          {dict.work.emptyBody}
+        </p>
+        <a
+          href={`#${SECTION_IDS.contact}`}
+          className="group mt-10 inline-flex h-14 items-stretch border border-line bg-white/[0.03] transition-colors duration-300 hover:border-line-strong hover:bg-white/[0.06]"
+        >
+          <span className="flex items-center px-7 text-note font-medium whitespace-nowrap">
             {dict.work.cta}
+          </span>
+          <span className="grid w-12 shrink-0 place-items-center border-l border-line">
             <ArrowUpRight
-              size={18}
+              size={15}
               weight="bold"
-              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="text-brand-bright transition-transform duration-300 ease-swift group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
-          </a>
-        </div>
-      </div>
-    </Reveal>
+          </span>
+        </a>
+      </Reveal>
+    </div>
   );
 }
 
-/** Renders as soon as the first entry lands in src/data/projects.ts. */
+/**
+ * Renders as soon as the first entry lands in src/data/projects.ts.
+ * The first project runs full width as the featured case, the rest pair up.
+ */
 function ProjectGrid() {
+  const [featured, ...rest] = projects;
+
   return (
-    <RevealGroup
-      stagger={0.1}
-      className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2"
-    >
-      {projects.map((project, index) => {
-        const Wrapper: React.ElementType = project.href ? "a" : "div";
+    <div className="mt-rhythm">
+      <ProjectTile project={featured} featured />
 
-        return (
-          <RevealItem
-            key={project.slug}
-            className={index % 3 === 0 ? "md:col-span-2" : undefined}
-          >
-            <Wrapper
-              {...(project.href
-                ? { href: project.href, target: "_blank", rel: "noreferrer" }
-                : {})}
-              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/8 bg-surface/60 transition-colors duration-500 hover:border-white/16"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={project.image.src}
-                  alt={project.image.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-              </div>
+      {rest.length > 0 && (
+        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {rest.map((project) => (
+            <ProjectTile key={project.slug} project={project} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
-              <div className="flex flex-1 flex-col p-7">
-                <div className="flex items-start justify-between gap-4">
-                  <h3 className="text-lg font-medium tracking-tight">
-                    {project.title}
-                  </h3>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {project.year}
-                  </span>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {project.summary}
-                </p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {project.services.map((service) => (
-                    <span
-                      key={service}
-                      className="rounded-full border border-white/10 px-3 py-1 text-xs text-muted-foreground"
-                    >
-                      {service}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Wrapper>
-          </RevealItem>
-        );
-      })}
-    </RevealGroup>
+function ProjectTile({
+  project,
+  featured = false,
+}: {
+  project: Project;
+  featured?: boolean;
+}) {
+  const Wrapper: React.ElementType = project.href ? "a" : "div";
+
+  return (
+    <Reveal as="surface">
+      <Wrapper
+        {...(project.href
+          ? { href: project.href, target: "_blank", rel: "noreferrer" }
+          : {})}
+        className="group block"
+      >
+        {/*
+          The image is oversized inside a clipped frame and drifts against the
+          scroll, so the crop keeps changing as the tile passes. Hover pushes it
+          further in. Both are transform only, so neither costs a layout pass.
+        */}
+        <div
+          className={`relative overflow-hidden border border-line bg-surface ${
+            featured ? "aspect-[16/9] lg:aspect-[21/9]" : "aspect-[4/3]"
+          }`}
+        >
+          <Parallax speed={0.08} className="absolute inset-0 -top-[8%] h-[116%]">
+            <Image
+              src={project.image.src}
+              alt={project.image.alt}
+              fill
+              sizes={featured ? "100vw" : "(max-width: 1024px) 100vw, 50vw"}
+              className="object-cover transition-transform duration-700 ease-swift group-hover:scale-[1.04]"
+            />
+          </Parallax>
+
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,oklch(0_0_0/55%),transparent_45%)]"
+          />
+
+          <span className="absolute right-0 bottom-0 grid size-14 place-items-center bg-brand text-white opacity-0 transition-opacity duration-400 group-hover:opacity-100">
+            <ArrowUpRight size={18} weight="bold" />
+          </span>
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+          <h3 className={featured ? "text-display" : "text-title"}>
+            {project.title}
+          </h3>
+          <time className="label text-muted-foreground">{project.year}</time>
+        </div>
+
+        <p className="mt-4 max-w-[58ch] text-note text-muted-foreground">
+          {project.summary}
+        </p>
+
+        <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-4">
+          {project.services.map((service) => (
+            <li key={service} className="label text-muted-foreground">
+              {service}
+            </li>
+          ))}
+        </ul>
+      </Wrapper>
+    </Reveal>
   );
 }

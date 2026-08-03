@@ -6,35 +6,38 @@ import { CONTACT_EMAIL } from "@/lib/site";
 
 export function SiteFooter({ dict }: { dict: Dictionary }) {
   return (
-    <footer className="hairline-top relative z-10 px-4 py-10 sm:px-6">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <LogoMark alt="" className="h-5 w-auto" />
-            <span className="text-sm font-semibold tracking-tight">Studio</span>
-            <span className="sr-only">F&amp;J Studio</span>
-          </div>
-          <p className="mt-2 text-sm text-muted-foreground">
+    <footer className="relative z-10 border-t border-line">
+      <div className="mx-auto flex max-w-[100rem] flex-col gap-8 px-5 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="flex items-center gap-3">
+          <LogoMark alt="" className="h-5 w-auto" />
+          <span className="text-note font-semibold tracking-tight">Studio</span>
+          <span className="sr-only">F&amp;J Studio</span>
+          <span aria-hidden className="h-4 w-px bg-line" />
+          <span className="label text-muted-foreground">
             {dict.footer.tagline}
-          </p>
+          </span>
         </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="label text-muted-foreground underline-offset-4 transition-colors duration-300 hover:text-foreground hover:underline"
           >
             {CONTACT_EMAIL}
           </a>
-          <p className="text-sm text-muted-foreground">
+          <p className="label text-muted-foreground tabular">
             &copy; {new Date().getFullYear()}
           </p>
           <a
             href={`#${SECTION_IDS.top}`}
             aria-label={dict.footer.backToTop}
-            className="inline-flex size-10 items-center justify-center rounded-full border border-white/12 text-muted-foreground transition-colors hover:border-white/25 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none"
+            className="group inline-flex size-10 items-center justify-center border border-line text-muted-foreground transition-colors duration-300 hover:border-line-strong hover:text-foreground"
           >
-            <ArrowUp size={16} weight="bold" />
+            <ArrowUp
+              size={14}
+              weight="bold"
+              className="transition-transform duration-300 ease-swift group-hover:-translate-y-0.5"
+            />
           </a>
         </div>
       </div>
