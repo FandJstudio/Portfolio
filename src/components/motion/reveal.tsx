@@ -145,25 +145,31 @@ export function MaskReveal({
 
   if (reduce) return <span className={className}>{text}</span>;
 
-  const animation = immediate
-    ? { animate: "visible" as const }
-    : {
-        whileInView: "visible" as const,
-        viewport: { once: true, amount: 0.35 },
-      };
+  /*
+    Each word animates itself.
+
+    An earlier version wrapped the words in a parent motion element and drove
+    them with variants plus staggerChildren. That is the tidier way to write it
+    and one dependency too many: if the parent never made it from "hidden" to
+    "visible", every word stayed at opacity 0 with nothing to recover it. That
+    is how the hero headline stayed blank for a visitor while the rest of the
+    hero appeared normally.
+
+    A per word delay reproduces the same stagger with nothing to orchestrate.
+  */
+  const motionProps = (index: number) => ({
+    initial: { y: "0.38em", opacity: 0 },
+    transition: { duration: 0.9, ease: EASE, delay: delay + index * stagger },
+    ...(immediate
+      ? { animate: { y: 0, opacity: 1 } }
+      : {
+          whileInView: { y: 0, opacity: 1 },
+          viewport: { once: true, amount: 0.35 },
+        }),
+  });
 
   return (
-    <motion.span
-      className={className}
-      initial="hidden"
-      variants={{
-        hidden: {},
-        visible: {
-          transition: { staggerChildren: stagger, delayChildren: delay },
-        },
-      }}
-      {...animation}
-    >
+    <span className={className}>
       {words.map((word, index) => (
         // The space is a text node between the spans, never inside one. An
         // inline-block is atomic, so a trailing space within it gives the line
@@ -172,21 +178,14 @@ export function MaskReveal({
           <motion.span
             data-reveal
             className="inline-block will-change-transform"
-            variants={{
-              hidden: { y: "0.38em", opacity: 0 },
-              visible: {
-                y: 0,
-                opacity: 1,
-                transition: { duration: 0.9, ease: EASE },
-              },
-            }}
+            {...motionProps(index)}
           >
             {word}
           </motion.span>
           {index < words.length - 1 ? " " : null}
         </Fragment>
       ))}
-    </motion.span>
+    </span>
   );
 }
 
