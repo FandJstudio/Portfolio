@@ -4,95 +4,86 @@ import {
   CloudArrowUp,
   Code,
   DeviceMobile,
+  MagnifyingGlass,
   PenNib,
+  PlugsConnected,
   ShieldCheck,
 } from "@phosphor-icons/react/ssr";
 
-import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { MaskReveal, Reveal } from "@/components/motion/reveal";
 import { SECTION_IDS, type Dictionary } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 
 type ServiceKey = keyof Dictionary["services"]["items"];
 
-type ServiceLayout = {
-  key: ServiceKey;
-  icon: Icon;
-  /** Column span on large screens. The grid is 6 wide. */
-  span: string;
-  /** Surface treatment, kept within the one accent. */
-  surface?: string;
-};
-
-const layout: ServiceLayout[] = [
-  {
-    key: "design",
-    icon: PenNib,
-    span: "lg:col-span-4",
-    surface:
-      "bg-[radial-gradient(120%_120%_at_100%_0%,color-mix(in_oklch,var(--brand)_28%,transparent),transparent_60%)]",
-  },
-  { key: "code", icon: Code, span: "lg:col-span-2" },
-  { key: "speed", icon: DeviceMobile, span: "lg:col-span-2" },
-  {
-    key: "hosting",
-    icon: CloudArrowUp,
-    span: "lg:col-span-4",
-    surface:
-      "bg-[radial-gradient(circle_at_1px_1px,oklch(1_0_0/_9%)_1px,transparent_0)] [background-size:22px_22px]",
-  },
-  { key: "updates", icon: ArrowsClockwise, span: "lg:col-span-3" },
-  {
-    key: "security",
-    icon: ShieldCheck,
-    span: "lg:col-span-3",
-    surface: "bg-[linear-gradient(200deg,oklch(1_0_0/_6%),transparent_55%)]",
-  },
+/* Order is the running order on the page, and the numbers follow from it. */
+const rows: { key: ServiceKey; icon: Icon }[] = [
+  { key: "design", icon: PenNib },
+  { key: "code", icon: Code },
+  { key: "speed", icon: DeviceMobile },
+  { key: "hosting", icon: CloudArrowUp },
+  { key: "updates", icon: ArrowsClockwise },
+  { key: "security", icon: ShieldCheck },
+  { key: "seo", icon: MagnifyingGlass },
+  { key: "integrations", icon: PlugsConnected },
 ];
 
 export function Services({ dict }: { dict: Dictionary }) {
   return (
-    <section
-      id={SECTION_IDS.services}
-      className="relative z-10 px-4 py-24 sm:px-6 lg:py-32"
-    >
-      <div className="mx-auto max-w-6xl">
+    <section id={SECTION_IDS.services} className="relative z-10 py-section-tight">
+      <div className="mx-auto max-w-[100rem] px-5 sm:px-8">
         <Reveal>
-          <h2 className="max-w-[20ch] text-3xl leading-[1.1] font-semibold tracking-tight text-balance-tight sm:text-4xl lg:text-5xl">
-            {dict.services.headline}
-          </h2>
-          <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-muted-foreground">
+          <p className="label text-brand-bright">{dict.nav.links[0].label}</p>
+        </Reveal>
+        <h2 className="mt-7 max-w-[16ch] text-display">
+          <MaskReveal text={dict.services.headline} />
+        </h2>
+        <Reveal delay={0.1}>
+          <p className="mt-8 max-w-[62ch] text-lead text-muted-foreground">
             {dict.services.body}
           </p>
         </Reveal>
+      </div>
 
-        <RevealGroup className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
-          {layout.map(({ key, icon: Glyph, span, surface }) => {
-            const copy = dict.services.items[key];
+      {/*
+        Loud numbered blocks rather than a quiet list. Each row is a hit target
+        the full width of the page, the count gives the set a rhythm to read
+        down, and the red wash rising on hover tells you which one you are on
+        without moving anything.
+      */}
+      <div className="mt-rhythm">
+        {rows.map(({ key, icon: Glyph }, index) => {
+          const copy = dict.services.items[key];
 
-            return (
-              <RevealItem key={key} className={cn(span)}>
-                <article
-                  className={cn(
-                    "group relative flex h-full flex-col rounded-2xl border border-white/8 bg-surface/60 p-7 transition-colors duration-500 hover:border-white/16",
-                    surface,
-                  )}
-                >
-                  <Glyph
-                    size={22}
-                    weight="light"
-                    className="text-brand-bright transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <h3 className="mt-6 text-lg font-medium tracking-tight">
+          return (
+            <Reveal key={key} as="text">
+              <article className="group relative overflow-hidden border-t border-line last:border-b">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-[color-mix(in_oklch,var(--brand)_11%,transparent)] transition-transform duration-600 ease-swift group-hover:scale-y-100"
+                />
+
+                <div className="relative mx-auto grid max-w-[100rem] grid-cols-1 gap-4 px-5 py-7 sm:px-8 lg:grid-cols-12 lg:items-baseline lg:gap-10 lg:py-9">
+                  <span className="label tabular text-muted-foreground transition-colors duration-500 group-hover:text-brand-bright lg:col-span-1">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <h3 className="flex items-center gap-4 text-subtitle lg:col-span-6 lg:text-title">
+                    <Glyph
+                      size={20}
+                      weight="light"
+                      className="shrink-0 text-brand-bright lg:hidden"
+                    />
                     {copy.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+
+                  <p className="max-w-[52ch] text-body text-muted-foreground lg:col-span-5">
                     {copy.body}
                   </p>
-                </article>
-              </RevealItem>
-            );
-          })}
-        </RevealGroup>
+                </div>
+              </article>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
   );

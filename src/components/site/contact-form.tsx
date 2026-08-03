@@ -19,8 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
+/*
+  Underlined fields, not boxes. Boxed inputs would reintroduce the rounded
+  container language the rest of the page has dropped; a rule under the text
+  matches the ruled rows used everywhere else and keeps the form quiet until
+  it is focused, at which point the rule turns red.
+*/
 const fieldClass =
-  "h-12 rounded-xl border-white/12 bg-white/[0.03] px-4 text-base text-foreground transition-colors placeholder:text-muted-foreground hover:border-white/20 focus-visible:border-ring focus-visible:ring-ring/40 aria-invalid:border-destructive/60 md:text-sm dark:bg-white/[0.03]";
+  "h-12 rounded-none border-0 border-b border-line bg-transparent px-0 text-body text-foreground transition-colors duration-300 placeholder:text-muted-foreground/80 hover:border-line-strong focus-visible:border-brand focus-visible:ring-0 focus-visible:outline-none aria-invalid:border-destructive md:text-note dark:bg-transparent";
 
 export function ContactForm({
   dict,
@@ -100,7 +106,7 @@ export function ContactForm({
           aria-describedby={errorOf("message") ? errorId("message") : undefined}
           className={cn(
             fieldClass,
-            "h-auto min-h-36 resize-none py-3.5 leading-relaxed",
+            "h-auto min-h-32 resize-none pt-2 pb-3.5 leading-relaxed",
           )}
         />
       </Field>
@@ -116,7 +122,7 @@ export function ContactForm({
         />
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-1 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <SubmitButton idle={copy.submit} pendingLabel={copy.sending} />
         <StatusMessage status={state.status} message={state.message} />
       </div>
@@ -141,17 +147,19 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-medium text-foreground">
+      <label htmlFor={id} className="label text-muted-foreground">
         {label}
       </label>
       {children}
-      {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {hint && !error && (
+        <p className="text-micro text-muted-foreground">{hint}</p>
+      )}
       {error && (
         <p
           id={errorId}
-          className="flex items-center gap-1.5 text-xs text-destructive"
+          className="flex items-center gap-1.5 text-micro text-destructive"
         >
-          <WarningCircle size={14} weight="bold" />
+          <WarningCircle size={14} weight="bold" className="shrink-0" />
           {error}
         </p>
       )}
@@ -172,23 +180,22 @@ function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand px-7 text-[0.95rem] font-medium whitespace-nowrap text-white transition-colors hover:bg-[color-mix(in_oklch,var(--brand),white_10%)] focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none active:translate-y-px disabled:opacity-70"
+      className="group inline-flex h-14 items-stretch bg-brand text-white transition-colors duration-300 hover:bg-[color-mix(in_oklch,var(--brand),white_14%)] disabled:opacity-70"
     >
-      {pending ? (
-        <>
-          <CircleNotch size={18} weight="bold" className="animate-spin" />
-          {pendingLabel}
-        </>
-      ) : (
-        <>
-          {idle}
+      <span className="flex items-center px-7 text-note font-medium whitespace-nowrap">
+        {pending ? pendingLabel : idle}
+      </span>
+      <span className="grid w-12 shrink-0 place-items-center border-l border-white/25">
+        {pending ? (
+          <CircleNotch size={16} weight="bold" className="animate-spin" />
+        ) : (
           <ArrowUpRight
-            size={18}
+            size={16}
             weight="bold"
-            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            className="transition-transform duration-300 ease-swift group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
           />
-        </>
-      )}
+        )}
+      </span>
     </button>
   );
 }
@@ -210,12 +217,12 @@ function StatusMessage({
       role="status"
       aria-live="polite"
       className={cn(
-        "flex items-start gap-2 text-sm",
+        "flex items-start gap-2 text-micro",
         success ? "text-foreground" : "text-destructive",
       )}
     >
       <Glyph
-        size={16}
+        size={15}
         weight="bold"
         className={cn("mt-0.5 shrink-0", success && "text-brand-bright")}
       />

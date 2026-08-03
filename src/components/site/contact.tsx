@@ -1,4 +1,4 @@
-import { Reveal } from "@/components/motion/reveal";
+import { MaskReveal, Reveal } from "@/components/motion/reveal";
 import { ContactForm } from "@/components/site/contact-form";
 import { SECTION_IDS, type Dictionary, type Locale } from "@/lib/i18n";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
@@ -12,42 +12,49 @@ export function Contact({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   return (
     <section
       id={SECTION_IDS.contact}
-      className="relative z-10 px-4 pt-24 pb-28 sm:px-6 lg:pt-32"
+      className="relative z-10 border-t border-line py-section"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-[100rem] px-5 sm:px-8">
         <Reveal>
-          <div className="glass relative overflow-hidden rounded-3xl px-6 py-14 sm:px-12 sm:py-16">
-            <div className="absolute -bottom-40 left-1/4 size-[32rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklch,var(--brand)_26%,transparent),transparent)] blur-3xl" />
-
-            <div className="relative grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-5">
-                <h2 className="max-w-[16ch] text-3xl leading-[1.1] font-semibold tracking-tight text-balance-tight sm:text-4xl">
-                  {dict.contact.headline}
-                </h2>
-                <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-muted-foreground">
-                  {dict.contact.body}
-                </p>
-
-                <dl className="mt-10 space-y-4 text-sm">
-                  {details.map((detail) => (
-                    <div key={detail.label}>
-                      <dt className="text-muted-foreground">{detail.label}</dt>
-                      <dd
-                        className={`mt-1 font-medium ${detail.wrap ? "break-all" : ""}`}
-                      >
-                        {detail.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-
-              <div className="lg:col-span-7">
-                <ContactForm dict={dict} lang={lang} />
-              </div>
-            </div>
-          </div>
+          <p className="label text-brand-bright">{dict.nav.cta}</p>
         </Reveal>
+
+        <div className="mt-6 grid grid-cols-1 gap-rhythm lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-5">
+            <h2 className="max-w-[13ch] text-display">
+              <MaskReveal text={dict.contact.headline} />
+            </h2>
+            <Reveal delay={0.1}>
+              <p className="mt-8 max-w-[44ch] text-lead text-muted-foreground">
+                {dict.contact.body}
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.16}>
+              <dl className="mt-12">
+                {details.map((detail) => (
+                  <div
+                    key={detail.label}
+                    className="flex items-baseline justify-between gap-6 border-t border-line py-4 last:border-b"
+                  >
+                    <dt className="label shrink-0 text-muted-foreground">
+                      {detail.label}
+                    </dt>
+                    <dd
+                      className={`text-note font-medium tabular ${detail.wrap ? "break-all" : ""}`}
+                    >
+                      {detail.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          </div>
+
+          <div className="lg:col-span-6 lg:col-start-7">
+            <ContactForm dict={dict} lang={lang} />
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -37,10 +37,7 @@ export function LanguageSwitcher({
     <div
       role="group"
       aria-label={label}
-      className={cn(
-        "flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.03] p-0.5",
-        className,
-      )}
+      className={cn("flex items-center border border-line", className)}
     >
       {locales.map((locale) => {
         const Flag = flags[locale];
@@ -55,17 +52,18 @@ export function LanguageSwitcher({
             title={names[locale]}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-medium tracking-wide uppercase transition-colors focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none",
+              "flex items-center gap-1.5 px-2.5 py-1.5 label transition-colors duration-300",
+              locale === locales[1] ? "border-l border-line" : "",
               active
-                ? "bg-white/10 text-foreground"
+                ? "bg-white/8 text-foreground"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
             <Flag
               aria-hidden
               className={cn(
-                "h-3 w-[18px] shrink-0 rounded-[2px] object-cover transition-opacity",
-                active ? "opacity-100" : "opacity-60",
+                "h-3 w-[18px] shrink-0 object-cover transition-opacity duration-300",
+                active ? "opacity-100" : "opacity-55",
               )}
             />
             <span className="sr-only">{names[locale]}</span>

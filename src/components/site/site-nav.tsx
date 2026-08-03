@@ -2,122 +2,105 @@
 
 import { useState } from "react";
 import { List, X } from "@phosphor-icons/react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { LanguageSwitcher } from "@/components/site/language-switcher";
 import { LogoMark } from "@/components/site/logo-mark";
 import { SECTION_IDS, type Dictionary, type Locale } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 
 export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
-  const { scrollY } = useScroll();
-
-  /* State flips once at the threshold, not on every scroll frame. */
-  useMotionValueEvent(scrollY, "change", (value) => {
-    setScrolled(value > 24);
-  });
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-3 sm:px-6">
-      <nav
-        className={cn(
-          "mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full px-3 pl-5 transition-all duration-500 sm:h-16",
-          scrolled ? "glass" : "border border-transparent",
-        )}
-      >
+    /*
+      Sits at the top of the document and scrolls away with it. Not fixed, not
+      sticky: the bar is part of the page rather than a layer floating over it,
+      so nothing ever covers a section heading and the hero gets the full height
+      of the window to itself.
+    */
+    <header className="relative z-50 border-b border-line">
+      <nav className="mx-auto flex h-16 max-w-[100rem] items-center justify-between px-5 sm:px-8">
         <a
           href={`#${SECTION_IDS.top}`}
-          className="flex items-center gap-2 whitespace-nowrap"
+          className="flex items-center gap-2.5 whitespace-nowrap"
         >
-          <LogoMark alt="" priority className="h-6 w-auto sm:h-7" />
-          <span className="text-[0.95rem] font-semibold tracking-tight">
-            Studio
-          </span>
+          <LogoMark alt="" priority className="h-[22px] w-auto" />
+          <span className="text-note font-semibold tracking-tight">Studio</span>
           <span className="sr-only">F&amp;J Studio</span>
         </a>
 
-        <div className="hidden items-center gap-1 md:flex">
-          <LanguageSwitcher
-            current={lang}
-            label={dict.nav.languageLabel}
-            className="mr-2"
-          />
+        <div className="hidden items-center gap-8 md:flex">
+          <div className="flex items-center gap-7">
+            {dict.nav.links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="group relative label text-muted-foreground transition-colors duration-300 hover:text-foreground"
+              >
+                {link.label}
+                <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-brand transition-[width] duration-400 ease-swift group-hover:w-full" />
+              </a>
+            ))}
+          </div>
 
-          {dict.nav.links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none"
-            >
-              {link.label}
-            </a>
-          ))}
+          <LanguageSwitcher current={lang} label={dict.nav.languageLabel} />
 
           <a
             href={`#${SECTION_IDS.contact}`}
-            className="ml-2 inline-flex h-10 items-center rounded-full bg-brand px-5 text-sm font-medium whitespace-nowrap text-white transition-[transform,background-color] hover:bg-[color-mix(in_oklch,var(--brand),white_10%)] focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none active:translate-y-px"
+            className="inline-flex h-9 items-center bg-brand px-5 label text-white transition-colors duration-300 hover:bg-[color-mix(in_oklch,var(--brand),white_14%)]"
           >
             {dict.nav.cta}
           </a>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
-            className="inline-flex size-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-white/8 focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none"
-          >
-            {open ? <X size={20} /> : <List size={20} />}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+          aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
+          className="-mr-2 inline-flex size-10 items-center justify-center text-foreground transition-colors duration-300 hover:text-brand-bright md:hidden"
+        >
+          {open ? <X size={19} /> : <List size={19} />}
+        </button>
       </nav>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="glass mx-auto mt-2 max-w-6xl rounded-3xl p-2 md:hidden"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-line bg-background md:hidden"
           >
-            <div className="px-2 pt-1 pb-2">
-              <LanguageSwitcher
-                current={lang}
-                label={dict.nav.languageLabel}
-                onNavigate={() => setOpen(false)}
-                className="w-fit"
-              />
-            </div>
+            <div className="px-5 py-4 sm:px-8">
+              {dict.nav.links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="block border-b border-line py-4 text-subtitle text-muted-foreground transition-colors duration-300 hover:text-foreground"
+                >
+                  {link.label}
+                </a>
+              ))}
 
-            {dict.nav.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-2xl px-4 py-3 text-base text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href={`#${SECTION_IDS.contact}`}
-              onClick={() => setOpen(false)}
-              className="mt-1 block rounded-2xl bg-brand px-4 py-3 text-center text-base font-medium text-white"
-            >
-              {dict.nav.cta}
-            </a>
+              <div className="mt-6 flex items-center justify-between gap-4">
+                <LanguageSwitcher
+                  current={lang}
+                  label={dict.nav.languageLabel}
+                  onNavigate={() => setOpen(false)}
+                />
+                <a
+                  href={`#${SECTION_IDS.contact}`}
+                  onClick={() => setOpen(false)}
+                  className="inline-flex h-11 flex-1 items-center justify-center bg-brand px-5 label text-white"
+                >
+                  {dict.nav.cta}
+                </a>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
