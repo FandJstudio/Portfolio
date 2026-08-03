@@ -45,6 +45,7 @@ export function Reveal({
 
   return (
     <motion.div
+      data-reveal
       className={className}
       initial={reduce ? false : variant.hidden}
       whileInView={{
@@ -106,7 +107,7 @@ export function RevealItem({
   if (reduce) return <div className={className}>{children}</div>;
 
   return (
-    <motion.div className={className} variants={CHARACTER[as]}>
+    <motion.div data-reveal className={className} variants={CHARACTER[as]}>
       {children}
     </motion.div>
   );
@@ -169,6 +170,7 @@ export function MaskReveal({
         // breaker nothing to use and the whole headline runs off on one line.
         <Fragment key={`${word}-${index}`}>
           <motion.span
+            data-reveal
             className="inline-block will-change-transform"
             variants={{
               hidden: { y: "0.38em", opacity: 0 },

@@ -225,6 +225,24 @@
   text-transform: uppercase;
 }
 
+
+/*
+  Safety net for the scroll reveals.
+
+  Motion writes its initial styles into the server rendered HTML, so every
+  revealed element arrives as opacity:0. If the bundle never runs, the page is
+  a black rectangle with a handful of unanimated labels on it. That happened to
+  a real visitor.
+
+  Unless the document has declared that a script is alive and hiding is
+  deliberate, nothing is allowed to stay invisible. !important is required:
+  the values being overridden are inline styles.
+*/
+html:not([data-motion="pending"]):not([data-motion="ready"]) [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 @keyframes accordion-down {
   from {
     height: 0;

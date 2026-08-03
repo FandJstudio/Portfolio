@@ -30,6 +30,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
         className="pointer-events-none absolute inset-x-0 top-0 h-[68%] [mask-image:linear-gradient(to_bottom,black_45%,transparent_96%)]"
       >
         <motion.div
+          data-reveal
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.8, ease: EASE }}
@@ -45,6 +46,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
       </div>
 
       <motion.p
+        data-reveal
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
@@ -59,6 +61,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
         </h1>
 
         <motion.div
+          data-reveal
           initial={reduce ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.75, ease: EASE }}
