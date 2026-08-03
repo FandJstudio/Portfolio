@@ -143,6 +143,44 @@ export function MaskReveal({
   const reduce = useReducedMotion();
   const words = text.split(" ");
 
+  /*
+    The `immediate` headline is animated by the stylesheet, not by this library.
+
+    It is the largest text on the page and the one a visitor reads first, so it
+    must not depend on a JavaScript animation to become visible. It did, and it
+    failed twice in the wild: words served at opacity 0 that never got animated
+    to 1 leave the hero blank, and every recovery bolted on afterwards was
+    another moving part that could also miss.
+
+    A CSS keyframe removes the failure instead of catching it. It runs off the
+    stylesheet, so it plays whether or not the bundle executes, hydration
+    finishes, or Motion ever mounts. The stagger is an animation-delay per word,
+    and reduced motion is handled by a variant rather than a hook, which keeps
+    JavaScript out of this path completely.
+
+    The scroll-triggered headlines below genuinely need to know where the
+    viewport is, so those stay with Motion.
+  */
+  if (immediate) {
+    return (
+      <span className={className}>
+        {words.map((word, index) => (
+          <Fragment key={`${word}-${index}`}>
+            <span
+              className="inline-block will-change-transform animate-word-in motion-reduce:animate-none"
+              style={{
+                animationDelay: `${(delay + index * stagger).toFixed(3)}s`,
+              }}
+            >
+              {word}
+            </span>
+            {index < words.length - 1 ? " " : null}
+          </Fragment>
+        ))}
+      </span>
+    );
+  }
+
   if (reduce) return <span className={className}>{text}</span>;
 
   /*
@@ -151,21 +189,15 @@ export function MaskReveal({
     An earlier version wrapped the words in a parent motion element and drove
     them with variants plus staggerChildren. That is the tidier way to write it
     and one dependency too many: if the parent never made it from "hidden" to
-    "visible", every word stayed at opacity 0 with nothing to recover it. That
-    is how the hero headline stayed blank for a visitor while the rest of the
-    hero appeared normally.
+    "visible", every word stayed at opacity 0 with nothing to recover it.
 
     A per word delay reproduces the same stagger with nothing to orchestrate.
   */
   const motionProps = (index: number) => ({
     initial: { y: "0.38em", opacity: 0 },
     transition: { duration: 0.9, ease: EASE, delay: delay + index * stagger },
-    ...(immediate
-      ? { animate: { y: 0, opacity: 1 } }
-      : {
-          whileInView: { y: 0, opacity: 1 },
-          viewport: { once: true, amount: 0.35 },
-        }),
+    whileInView: { y: 0, opacity: 1 },
+    viewport: { once: true, amount: 0.35 },
   });
 
   return (

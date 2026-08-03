@@ -59,6 +59,16 @@
   /* Radix reports the measured panel height, so height can actually be animated. */
   --animate-accordion-down: accordion-down 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   --animate-accordion-up: accordion-up 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /*
+    Entrance for the hero headline, one word at a time via animation-delay.
+
+    This lives in the stylesheet rather than in the animation library on
+    purpose: the headline is the first thing anyone reads, and it must not be
+    able to stay invisible because a script did not run. `both` holds the
+    opening frame during the delay, so the stagger still reads as a stagger.
+  */
+  --animate-word-in: word-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @theme inline {
@@ -241,6 +251,17 @@
 html:not([data-motion="pending"]):not([data-motion="ready"]) [data-reveal] {
   opacity: 1 !important;
   transform: none !important;
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.38em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes accordion-down {

@@ -33,7 +33,7 @@ export function MotionGate() {
     const root = document.documentElement;
     root.dataset.motion = "ready";
 
-    const sweep = window.setTimeout(() => {
+    const sweep = () => {
       for (const el of document.querySelectorAll<HTMLElement>("[data-reveal]")) {
         if (getComputedStyle(el).opacity !== "0") continue;
 
@@ -44,9 +44,31 @@ export function MotionGate() {
         el.style.opacity = "1";
         el.style.transform = "none";
       }
-    }, SWEEP_DELAY_MS);
+    };
 
-    return () => window.clearTimeout(sweep);
+    /*
+      The countdown starts when the tab is actually being looked at.
+
+      A page opened in a background tab gets its animation clock frozen, so
+      entrances sit unstarted for as long as the tab stays hidden. Counting
+      from load would mean the sweep fires into a frozen page and snaps
+      everything visible, and the visitor would switch over to a finished
+      page that never animated. Waiting for the first visible moment keeps
+      the choreography for the common case of opening a link in a new tab.
+    */
+    let timer = 0;
+    const arm = () => {
+      if (document.visibilityState !== "visible") return;
+      document.removeEventListener("visibilitychange", arm);
+      timer = window.setTimeout(sweep, SWEEP_DELAY_MS);
+    };
+    document.addEventListener("visibilitychange", arm);
+    arm();
+
+    return () => {
+      document.removeEventListener("visibilitychange", arm);
+      window.clearTimeout(timer);
+    };
   }, []);
 
   return null;
