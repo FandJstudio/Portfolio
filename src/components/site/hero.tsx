@@ -16,7 +16,13 @@ export function Hero({ dict }: { dict: Dictionary }) {
   return (
     <section
       id={SECTION_IDS.top}
-      className="relative z-10 flex min-h-[calc(100dvh-4rem)] flex-col justify-between overflow-hidden px-5 pt-14 pb-14 sm:px-8 lg:pt-16 lg:pb-16"
+      /*
+        Full window height, not the window minus a header: the navigation now
+        floats over this section instead of sitting above it. The top padding
+        holds the copy clear of the links, so the numbers add up to the same gap
+        the old bar produced.
+      */
+      className="relative z-10 flex min-h-dvh flex-col justify-between overflow-hidden px-5 pt-30 pb-14 sm:px-8 lg:pt-32 lg:pb-16"
     >
       {/*
         The ribbon is centred in its own canvas, so the canvas covers only the
