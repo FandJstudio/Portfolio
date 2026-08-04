@@ -1,18 +1,18 @@
 "use client";
 
 import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react";
-import { motion, useReducedMotion } from "motion/react";
 
 import { MaskReveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { WebGLShader } from "@/components/ui/web-gl-shader";
 import { SECTION_IDS, type Dictionary } from "@/lib/i18n";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
+/*
+  Nothing in this section waits on JavaScript to become visible. The entrances
+  are stylesheet animations that play on load, so the hero renders on a browser
+  that is throttling its frame loop, which is where it previously came up blank.
+*/
 export function Hero({ dict }: { dict: Dictionary }) {
-  const reduce = useReducedMotion();
-
   return (
     <section
       id={SECTION_IDS.top}
@@ -29,44 +29,26 @@ export function Hero({ dict }: { dict: Dictionary }) {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[68%] [mask-image:linear-gradient(to_bottom,black_45%,transparent_96%)]"
       >
-        <motion.div
-          data-reveal
-          initial={reduce ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.8, ease: EASE }}
-          className="size-full"
-        >
+        <div className="size-full animate-fade-in [animation-duration:1.8s] motion-reduce:animate-none">
           <WebGLShader
             xScale={0.9}
             yScale={0.42}
             distortion={0.06}
             speed={0.42}
           />
-        </motion.div>
+        </div>
       </div>
 
-      <motion.p
-        data-reveal
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
-        className="relative label text-muted-foreground"
-      >
+      <p className="relative label text-muted-foreground animate-fade-in [animation-delay:0.2s] motion-reduce:animate-none">
         {dict.footer.tagline}
-      </motion.p>
+      </p>
 
       <div className="relative max-w-[76rem] pt-20">
         <h1 className="text-poster">
           <MaskReveal text={dict.hero.headline} immediate delay={0.15} />
         </h1>
 
-        <motion.div
-          data-reveal
-          initial={reduce ? false : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.75, ease: EASE }}
-          className="mt-11 flex flex-col gap-9 border-t border-line pt-9 xl:flex-row xl:items-start xl:justify-between xl:gap-14"
-        >
+        <div className="mt-11 flex flex-col gap-9 border-t border-line pt-9 animate-rise-in [animation-delay:0.75s] motion-reduce:animate-none xl:flex-row xl:items-start xl:justify-between xl:gap-14">
           <p className="max-w-[44ch] text-lead text-muted-foreground">
             {dict.hero.subtext}
           </p>
@@ -106,7 +88,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
               </span>
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
