@@ -237,20 +237,77 @@
 
 
 /*
-  Safety net for the scroll reveals.
+  Scroll reveals.
 
-  Motion writes its initial styles into the server rendered HTML, so every
-  revealed element arrives as opacity:0. If the bundle never runs, the page is
-  a black rectangle with a handful of unanimated labels on it. That happened to
-  a real visitor.
+  An element waits at opacity 0 until script marks it `data-shown`, and the
+  entrance then plays from here rather than from the animation library. The
+  reason is in reveal.tsx: a CSS animation is handed to the compositor and
+  finishes even on a browser that is starving the main thread's frame loop,
+  which is how this page ended up blank for a visitor twice.
+*/
+[data-reveal]:not([data-shown]) {
+  opacity: 0;
+}
 
-  Unless the document has declared that a script is alive and hiding is
-  deliberate, nothing is allowed to stay invisible. !important is required:
-  the values being overridden are inline styles.
+[data-reveal][data-shown] {
+  animation: enter-text 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--enter-delay, 0s);
+}
+
+[data-reveal="surface"][data-shown] {
+  animation-name: enter-surface;
+  animation-duration: 0.8s;
+}
+
+[data-reveal="word"][data-shown] {
+  animation-name: word-in;
+  animation-duration: 0.9s;
+}
+
+/*
+  Nothing is allowed to stay invisible unless the document has declared that a
+  script is alive and the hiding is deliberate. The inline script in the head
+  claims the flag; if the bundle never runs, its watchdog releases it and this
+  reveals the page.
 */
 html:not([data-motion="pending"]):not([data-motion="ready"]) [data-reveal] {
   opacity: 1 !important;
   transform: none !important;
+}
+
+/*
+  Reduced motion keeps the content and drops the choreography. Handled here so
+  the components need no hook for it, which keeps one more decision out of
+  JavaScript's hands.
+*/
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+@keyframes enter-text {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes enter-surface {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes word-in {
