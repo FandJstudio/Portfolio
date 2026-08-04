@@ -14,12 +14,14 @@ export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
 
   return (
     /*
-      Sits at the top of the document and scrolls away with it. Not fixed, not
-      sticky: the bar is part of the page rather than a layer floating over it,
-      so nothing ever covers a section heading and the hero gets the full height
-      of the window to itself.
+      No bar. The navigation is lifted out of the flow and laid straight over
+      the hero, so the light ribbon runs behind the links and the page begins at
+      the very top of the window with nothing boxing it in.
+
+      Absolute rather than fixed: it still scrolls away with the document, so it
+      never covers a section heading further down.
     */
-    <header className="relative z-50 border-b border-line">
+    <header className="absolute inset-x-0 top-0 z-50">
       <nav className="mx-auto flex h-16 max-w-[100rem] items-center justify-between px-5 sm:px-8">
         <a
           href={`#${SECTION_IDS.top}`}
