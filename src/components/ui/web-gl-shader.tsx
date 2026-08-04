@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "motion/react";
 
 /*
   Animated light ribbon: a horizontal sine wave rendered as an inverse-distance
@@ -24,6 +23,13 @@ import { useReducedMotion } from "motion/react";
 
   - A context can also be dropped by the browser on its own, so both the lost
     and restored events are handled and the scene rebuilds itself.
+
+  The ribbon runs for everyone, including visitors whose system asks for
+  reduced motion. That is the studio's call, made knowingly: it used to draw a
+  single frame and hold still for them, which read as a broken page rather than
+  a considered one. Everything else on the site still honours the setting - the
+  entrance animations are dropped entirely - so this is the one moving thing
+  that ignores it, and nothing is hidden behind it or conveyed by its motion.
 */
 
 const VERT = `#version 300 es
@@ -105,7 +111,6 @@ export function WebGLShader({
   speed = 0.5,
 }: WebGLShaderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const reduce = useReducedMotion();
 
   /*
     Read through a ref so changing a uniform never tears down the GL context.
@@ -167,7 +172,7 @@ export function WebGLShader({
     };
 
     const start = () => {
-      if (running || disposed || reduce) return;
+      if (running || disposed) return;
       running = true;
       frame = requestAnimationFrame(loop);
     };
@@ -240,10 +245,7 @@ export function WebGLShader({
 
     const onContextRestored = () => {
       if (disposed) return;
-      if (init()) {
-        if (reduce) draw(0);
-        else start();
-      }
+      if (init()) start();
     };
 
     canvas.addEventListener("webglcontextlost", onContextLost);
@@ -260,12 +262,8 @@ export function WebGLShader({
     const resizeObserver = new ResizeObserver(resize);
 
     if (init()) {
-      if (reduce) {
-        draw(0);
-      } else {
-        observer.observe(canvas);
-        start();
-      }
+      observer.observe(canvas);
+      start();
       resizeObserver.observe(canvas);
     }
 
@@ -282,7 +280,7 @@ export function WebGLShader({
         killing the outgoing context poisons the one the next mount receives.
       */
     };
-  }, [reduce]);
+  }, []);
 
   return (
     <canvas
