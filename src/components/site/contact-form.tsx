@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useId } from "react";
+import { useActionState, useEffect, useId } from "react";
 import { useFormStatus } from "react-dom";
 import {
   ArrowUpRight,
@@ -14,6 +14,7 @@ import {
   initialContactState,
   type ContactFieldName,
 } from "@/lib/contact-state";
+import { track } from "@/lib/consent";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +40,19 @@ export function ContactForm({
     sendContactMessage,
     initialContactState,
   );
+
+  /*
+    Reports a successful send to Analytics, and silently does nothing when the
+    visitor declined - `track` is a no op without consent, so this component
+    does not need to know anything about that.
+
+    Only the fact of a message is reported. The name, address and text of the
+    enquiry are the visitor's, not Google's.
+  */
+  useEffect(() => {
+    if (state.status === "success") track("contact_form_submit");
+  }, [state.status]);
+
   const baseId = useId();
   const copy = dict.contact.form;
 

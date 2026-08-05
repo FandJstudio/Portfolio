@@ -8,9 +8,24 @@ import { LanguageSwitcher } from "@/components/site/language-switcher";
 import { LogoMark } from "@/components/site/logo-mark";
 import { SECTION_IDS, type Dictionary, type Locale } from "@/lib/i18n";
 
-export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
+export function SiteNav({
+  dict,
+  lang,
+  /*
+    Prefix for the in page anchors. Empty on the home page, where the sections
+    are on screen. Set to `/pl` or `/en` on the privacy policy, where the same
+    links have to travel back to the home page first instead of pointing at
+    fragments that do not exist on that page.
+  */
+  basePath = "",
+}: {
+  dict: Dictionary;
+  lang: Locale;
+  basePath?: string;
+}) {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
+  const to = (hash: string) => `${basePath}${hash}`;
 
   return (
     /*
@@ -24,7 +39,7 @@ export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
     <header className="absolute inset-x-0 top-0 z-50">
       <nav className="mx-auto flex h-16 max-w-[100rem] items-center justify-between px-5 sm:px-8">
         <a
-          href={`#${SECTION_IDS.top}`}
+          href={to(`#${SECTION_IDS.top}`)}
           className="flex items-center gap-2.5 whitespace-nowrap"
         >
           <LogoMark alt="" priority className="h-[22px] w-auto" />
@@ -37,7 +52,7 @@ export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
             {dict.nav.links.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={to(link.href)}
                 className="group relative label text-muted-foreground transition-colors duration-300 hover:text-foreground"
               >
                 {link.label}
@@ -49,7 +64,7 @@ export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
           <LanguageSwitcher current={lang} label={dict.nav.languageLabel} />
 
           <a
-            href={`#${SECTION_IDS.contact}`}
+            href={to(`#${SECTION_IDS.contact}`)}
             className="inline-flex h-9 items-center bg-brand px-5 label text-white transition-colors duration-300 hover:bg-[color-mix(in_oklch,var(--brand),white_14%)]"
           >
             {dict.nav.cta}
@@ -80,7 +95,7 @@ export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
               {dict.nav.links.map((link) => (
                 <a
                   key={link.href}
-                  href={link.href}
+                  href={to(link.href)}
                   onClick={() => setOpen(false)}
                   className="block border-b border-line py-4 text-subtitle text-muted-foreground transition-colors duration-300 hover:text-foreground"
                 >
@@ -95,7 +110,7 @@ export function SiteNav({ dict, lang }: { dict: Dictionary; lang: Locale }) {
                   onNavigate={() => setOpen(false)}
                 />
                 <a
-                  href={`#${SECTION_IDS.contact}`}
+                  href={to(`#${SECTION_IDS.contact}`)}
                   onClick={() => setOpen(false)}
                   className="inline-flex h-11 flex-1 items-center justify-center bg-brand px-5 label text-white"
                 >
