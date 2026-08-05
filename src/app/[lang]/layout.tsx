@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { MotionGate } from "@/components/motion/motion-gate";
+import { Analytics } from "@/components/site/analytics";
+import { CookieBanner } from "@/components/site/cookie-banner";
 import { getDictionary, isLocale, locales } from "@/lib/i18n";
 import "../globals.css";
 
@@ -79,6 +81,8 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
+  const dict = getDictionary(lang);
+
   return (
     <html
       lang={lang}
@@ -93,6 +97,11 @@ export default async function RootLayout({
       <body className="flex min-h-full flex-col overflow-x-hidden">
         <MotionGate />
         {children}
+        {/* Both live in the layout so the policy page carries them too: the
+            banner has to be reachable from every page, and the link that
+            reopens it sits in a footer that appears on all of them. */}
+        <Analytics />
+        <CookieBanner dict={dict} lang={lang} />
       </body>
     </html>
   );

@@ -33,7 +33,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <Faq dict={dict} />
         <Contact dict={dict} lang={lang} />
       </main>
-      <SiteFooter dict={dict} />
+      <SiteFooter dict={dict} lang={lang} />
     </>
   );
 }

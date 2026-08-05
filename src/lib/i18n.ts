@@ -215,6 +215,96 @@ const pl = {
   footer: {
     tagline: "Projektowanie i rozwój stron internetowych.",
     backToTop: "Wróć na górę strony",
+    privacy: "Polityka prywatności",
+    cookieSettings: "Ustawienia cookies",
+    description:
+      "Projektujemy, wdrażamy i prowadzimy strony firmowe. Od pierwszej rozmowy po hosting, aktualizacje i wsparcie techniczne.",
+    navHeading: "Strona",
+    navLinks: [
+      { href: `#${SECTION_IDS.fit}`, label: "Dla kogo" },
+      { href: `#${SECTION_IDS.services}`, label: "Co robimy" },
+      { href: `#${SECTION_IDS.process}`, label: "Jak pracujemy" },
+      { href: `#${SECTION_IDS.work}`, label: "Projekty" },
+      { href: `#${SECTION_IDS.faq}`, label: "FAQ" },
+    ],
+    contactHeading: "Kontakt",
+    writeToUs: "Napisz do nas",
+    legalHeading: "Formalności",
+    rights: "Wszelkie prawa zastrzeżone.",
+  },
+  cookies: {
+    title: "Cookies",
+    body: "Chcemy wiedzieć, ile osób odwiedza tę stronę i skąd trafiają. Do tego używamy Google Analytics. Nic się nie uruchomi, dopóki nie klikniesz „Akceptuję”.",
+    accept: "Akceptuję",
+    reject: "Odrzucam",
+    /* Announced to screen readers when the banner appears. */
+    label: "Zgoda na cookies analityczne",
+  },
+  privacy: {
+    /* Address of the page in this language. Also the name of its route folder. */
+    slug: "polityka-prywatnosci",
+    title: "Polityka prywatności",
+    updated: "Ostatnia aktualizacja: 5 sierpnia 2026",
+    intro:
+      "Ta strona zbiera możliwie mało danych. Poniżej opisujemy dokładnie jakie, po co i co możesz z tym zrobić.",
+    back: "Wróć na stronę główną",
+    sections: [
+      {
+        heading: "Kto odpowiada za Twoje dane",
+        body: [
+          "Administratorem danych jest F&J Studio. W każdej sprawie dotyczącej danych osobowych napisz na fjstudiobuisness@gmail.com.",
+        ],
+      },
+      {
+        heading: "Jakie dane zbieramy",
+        body: [
+          "Z formularza kontaktowego: imię, adres e-mail i treść wiadomości. Podajesz je dobrowolnie, ale bez adresu e-mail nie mamy jak odpowiedzieć.",
+          "Z analityki, wyłącznie po Twojej zgodzie: przybliżona lokalizacja, rodzaj urządzenia i przeglądarki, odwiedzone sekcje strony oraz to, skąd na nią trafiłeś. Nie łączymy tych danych z Twoim imieniem ani adresem e-mail.",
+          "Nasz dostawca hostingu zapisuje techniczne logi serwera, w tym adres IP. Jest to niezbędne do działania i bezpieczeństwa strony.",
+        ],
+      },
+      {
+        heading: "Po co i na jakiej podstawie",
+        body: [
+          "Wiadomości z formularza przetwarzamy, żeby odpowiedzieć na Twoje zapytanie i ewentualnie zawrzeć umowę. Podstawa: art. 6 ust. 1 lit. b oraz f RODO.",
+          "Analitykę prowadzimy wyłącznie na podstawie Twojej zgody. Podstawa: art. 6 ust. 1 lit. a RODO.",
+        ],
+      },
+      {
+        heading: "Cookies",
+        body: [
+          "Zanim wyrazisz zgodę, strona nie zapisuje żadnych plików cookies i nie łączy się z Google.",
+          "Po akceptacji Google Analytics zapisuje pliki o nazwach zaczynających się od _ga, przechowywane do dwóch lat. Służą do odróżnienia kolejnych wizyt tej samej osoby.",
+          "Twoją decyzję zapamiętujemy w pamięci lokalnej przeglądarki, a nie w pliku cookie. Nie trafia ona na nasz serwer.",
+          "Zgodę możesz cofnąć w każdej chwili linkiem „Ustawienia cookies” w stopce. Po cofnięciu usuwamy zapisane pliki analityczne.",
+        ],
+      },
+      {
+        heading: "Komu przekazujemy dane",
+        body: [
+          "Vercel Inc. — hosting i dostarczanie strony.",
+          "Google Ireland Limited — Google Analytics, wyłącznie po Twojej zgodzie.",
+          "Google Ireland Limited — poczta, na którą trafiają wiadomości z formularza.",
+          "Nie sprzedajemy danych i nie przekazujemy ich nikomu w celach marketingowych.",
+        ],
+      },
+      {
+        heading: "Jak długo je trzymamy",
+        body: [
+          "Korespondencję przechowujemy do 24 miesięcy od ostatniego kontaktu, chyba że wcześniej poprosisz o jej usunięcie.",
+          "Dane analityczne usuwane są zgodnie z ustawieniami Google Analytics, domyślnie po 14 miesiącach.",
+        ],
+      },
+      {
+        heading: "Twoje prawa",
+        body: [
+          "Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, wniesienia sprzeciwu oraz przeniesienia danych.",
+          "Zgodę na analitykę możesz wycofać w dowolnym momencie. Nie wpływa to na zgodność z prawem przetwarzania sprzed jej wycofania.",
+          "Jeśli uważasz, że przetwarzamy dane niezgodnie z prawem, możesz złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych.",
+          "Aby skorzystać z tych praw, napisz na fjstudiobuisness@gmail.com.",
+        ],
+      },
+    ],
   },
 };
 
@@ -414,6 +504,94 @@ const en: Dictionary = {
   footer: {
     tagline: "Web design and development.",
     backToTop: "Back to top",
+    privacy: "Privacy policy",
+    cookieSettings: "Cookie settings",
+    description:
+      "We design, build and run business websites. From the first conversation through to hosting, updates and technical support.",
+    navHeading: "Site",
+    navLinks: [
+      { href: `#${SECTION_IDS.fit}`, label: "Who it is for" },
+      { href: `#${SECTION_IDS.services}`, label: "What we do" },
+      { href: `#${SECTION_IDS.process}`, label: "How we work" },
+      { href: `#${SECTION_IDS.work}`, label: "Work" },
+      { href: `#${SECTION_IDS.faq}`, label: "FAQ" },
+    ],
+    contactHeading: "Contact",
+    writeToUs: "Get in touch",
+    legalHeading: "Legal",
+    rights: "All rights reserved.",
+  },
+  cookies: {
+    title: "Cookies",
+    body: "We would like to know how many people visit this site and where they come from. We use Google Analytics for that. Nothing runs until you choose to accept.",
+    accept: "Accept",
+    reject: "Decline",
+    label: "Consent for analytics cookies",
+  },
+  privacy: {
+    slug: "privacy-policy",
+    title: "Privacy policy",
+    updated: "Last updated: 5 August 2026",
+    intro:
+      "This site collects as little as it can. Below is exactly what, why, and what you can do about it.",
+    back: "Back to the home page",
+    sections: [
+      {
+        heading: "Who is responsible for your data",
+        body: [
+          "The data controller is F&J Studio. For anything concerning personal data, write to fjstudiobuisness@gmail.com.",
+        ],
+      },
+      {
+        heading: "What we collect",
+        body: [
+          "From the contact form: your name, email address and the message itself. Giving them is voluntary, but without an email address we have no way to reply.",
+          "From analytics, only after you consent: approximate location, device and browser type, which sections of the site you viewed, and where you arrived from. None of it is linked to your name or email address.",
+          "Our hosting provider records technical server logs, including IP addresses. This is necessary for the site to work and stay secure.",
+        ],
+      },
+      {
+        heading: "Why, and on what legal basis",
+        body: [
+          "Messages from the form are processed so that we can answer your enquiry and potentially enter into a contract. Basis: Article 6(1)(b) and (f) GDPR.",
+          "Analytics runs solely on the basis of your consent. Basis: Article 6(1)(a) GDPR.",
+        ],
+      },
+      {
+        heading: "Cookies",
+        body: [
+          "Before you consent, the site stores no cookies at all and makes no connection to Google.",
+          "After you accept, Google Analytics stores cookies whose names begin with _ga, kept for up to two years. They are used to tell repeat visits by the same person apart.",
+          "Your decision is kept in your browser's local storage, not in a cookie. It never reaches our server.",
+          "You can withdraw consent at any time through the “Cookie settings” link in the footer. Withdrawing deletes the analytics cookies already stored.",
+        ],
+      },
+      {
+        heading: "Who receives the data",
+        body: [
+          "Vercel Inc. — hosting and delivery of the site.",
+          "Google Ireland Limited — Google Analytics, only after you consent.",
+          "Google Ireland Limited — the mailbox that receives messages from the form.",
+          "We do not sell data and we do not pass it to anyone for marketing purposes.",
+        ],
+      },
+      {
+        heading: "How long we keep it",
+        body: [
+          "Correspondence is kept for up to 24 months after the last contact, unless you ask us to delete it sooner.",
+          "Analytics data is deleted according to the Google Analytics retention setting, 14 months by default.",
+        ],
+      },
+      {
+        heading: "Your rights",
+        body: [
+          "You have the right to access your data, to correct it, to have it erased, to restrict processing, to object, and to data portability.",
+          "You may withdraw consent for analytics at any time. This does not affect the lawfulness of processing carried out before withdrawal.",
+          "If you believe we are processing data unlawfully, you may lodge a complaint with the President of the Personal Data Protection Office in Poland.",
+          "To exercise any of these rights, write to fjstudiobuisness@gmail.com.",
+        ],
+      },
+    ],
   },
 };
 
