@@ -252,7 +252,8 @@ const pl = {
       {
         heading: "Kto odpowiada za Twoje dane",
         body: [
-          "Administratorem danych jest F&J Studio. W każdej sprawie dotyczącej danych osobowych napisz na fjstudiobuisness@gmail.com.",
+          "Administratorem Twoich danych osobowych jest Fabian Durkiewicz, osoba fizyczna prowadząca tę stronę pod nazwą F&J Studio.",
+          "Kontakt we wszystkich sprawach dotyczących danych osobowych: fjstudiobuisness@gmail.com.",
         ],
       },
       {
@@ -539,7 +540,8 @@ const en: Dictionary = {
       {
         heading: "Who is responsible for your data",
         body: [
-          "The data controller is F&J Studio. For anything concerning personal data, write to fjstudiobuisness@gmail.com.",
+          "The controller of your personal data is Fabian Durkiewicz, a natural person running this site under the name F&J Studio.",
+          "For anything concerning personal data, write to fjstudiobuisness@gmail.com.",
         ],
       },
       {
